@@ -84,7 +84,8 @@ const updateBalance = () => {
     // console.log(resultExpenses);
     const resultIncome = dbOpearation
         .filter((item) => item.amount > 0)
-        .reduce((result, item) => result + item.amount, 0); //Первый результат который вернет в result будет ноль, чтобы это произошло пишем через ,0
+        //Первый результат который вернет в result будет ноль, чтобы это произошло пишем через ,0
+        .reduce((result, item) => result + item.amount, 0); 
 
     const resultExpenses = dbOpearation
         .filter((item) => item.amount < 0)
@@ -97,7 +98,8 @@ const updateBalance = () => {
 // Функция добавления
 const addOperation = (event) => {
     // event - объект события, слушате, желательно для кроссбраузерности всегда принимать его \
-    // preventDefault - этот метод запрещает выполнять стандартное поведение (например запрещает принажатии переходить на ссылки) или в нашем случае запрещает перезагружаться 
+    // preventDefault - этот метод запрещает выполнять стандартное поведение (например запрещает принажатии переходить на ссылки) 
+    //или в нашем случае запрещает перезагружаться 
     event.preventDefault();
     
     const operationNameValue = operationName.value, 
