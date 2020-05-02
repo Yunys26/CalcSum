@@ -1,6 +1,6 @@
 
 // Функция генерации чисел
-const generateId = () => `${Math.round(Math.random() * 1e8).toString(16)}`;
+const generateId = () => `ID${Math.round(Math.random() * 1e8).toString(16)}`;
 // Присвоенные селекторы для работы с ними 
 const totalBalance = document.querySelector('.total__balance'),
     totalMoneyIncome = document.querySelector('.total__money-income'),
@@ -10,38 +10,45 @@ const totalBalance = document.querySelector('.total__balance'),
     operationName = document.querySelector('.operation__name'),
     operationAmount = document.querySelector('.operation__amount');
 
-let dbOpearation = [
-    {
-        id: '1',
-        description: 'Получил зарплату',
-        amount: 30000,
-    },
-    {
-        id: '2',
-        description: 'Подписка VkMusic',
-        amount: -175,
-    },
-    {
-        id: '3',
-        description: 'Возврата долга',
-        amount: +500,
-    },
-    {
-        id: '4',
-        description: 'Покупка обуви',
-        amount: -11000,
-    },
-    {
-        id: '5',
-        description: 'Сдал проект',
-        amount: 18000,
-    },
-    {
-        id: '6',
-        description: 'Покупка бижютерии',
-        amount: -2900,
-    },
-];
+let dbOpearation = JSON.parse(localStorage.getItem('calc')) || [];
+
+// let dbOpearation = [
+//     {
+//         id: '1',
+//         description: 'Получил зарплату',
+//         amount: 30000,
+//     },
+//     {
+//         id: '2',
+//         description: 'Подписка VkMusic',
+//         amount: -175,
+//     },
+//     {
+//         id: '3',
+//         description: 'Возврата долга',
+//         amount: +500,
+//     },
+//     {
+//         id: '4',
+//         description: 'Покупка обуви',
+//         amount: -11000,
+//     },
+//     {
+//         id: '5',
+//         description: 'Сдал проект',
+//         amount: 18000,
+//     },
+//     {
+//         id: '6',
+//         description: 'Покупка бижютерии',
+//         amount: -2900,
+//     },
+// ];
+// typeof - позволяет понять какой тип данных
+// console.log(typeof localStorage.getItem('calc'));
+//  localStorage - это объект который есть в любом браузере, храилище он может там хранить данные 
+// в нем можно хранить только строку и число
+
 // Функция динамичесого заполнения 
 const renderOperation = (operation) => {
 
@@ -56,7 +63,7 @@ const renderOperation = (operation) => {
     // ${operation.description} = Интерполяция - использование переменных в вызове HTML
     listItem.innerHTML = `${operation.description}
     <span class="history__money">${operation.amount} ₽</span>
-    <button class="history_delete data-id="${operation.id}">x</button>
+    <button class="history_delete data—id="${operation.id}">x</button>
     `;
     // Добавляем на страницу 
     historyList.append(listItem);
@@ -118,14 +125,27 @@ const addOperation = (event) => {
     operationAmount.value = '';
 };
 
+// const deleteOperation = (event) => {
+//     if (event.target.classList.contains('history__delete')) {
+//         console.log(evnet.target);
+//     }
 const deleteOperation = (event) => {
-    // contains() - проверяет выбранные класс на его присутствие
     const target = event.target;
-    if (event.target.classList.contains('history_delete')) {
-        console.log(event.target.dataset.id);
-        dbOpearation = dbOpearation.filter(operation => operation.id !== target.dataset.id);
+     // contains() - проверяет выбранные класс на его присутствие
+    if (target.classList.contains('history_delete')) {
+        console.log(target.dataset.id);
+        dbOpearation = dbOpearation.filter(operation => operation.id !== target.id);
         init();
     }
+    
+
+    // contains() - проверяет выбранные класс на его присутствие
+    // const target = event.target;
+    // if (event.target.classList.contains('history_delete')) {
+    //     console.log(event.target.dataset.id);
+    //     dbOpearation = dbOpearation.filter(operation => operation.id !== target.dataset.id);
+    //     init();
+    // }
 };
 
 // Функция вывода
@@ -136,6 +156,8 @@ const init = () => {
     dbOpearation.forEach(renderOperation);
     // Визуализация баланса
     updateBalance();
+    // stringify - переводит любой тип данных в сторку
+    localStorage.setItem('calc', JSON.stringify(dbOpearation));
 
     // for (let i = 0; i < dbOpearation.length; i++) 
     // {
@@ -146,3 +168,4 @@ const init = () => {
 form.addEventListener('submit', addOperation);
 historyList.addEventListener('click', deleteOperation);
 init();
+
